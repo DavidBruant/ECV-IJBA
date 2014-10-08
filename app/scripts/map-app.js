@@ -2,7 +2,7 @@ function mapApp() {
 	/* create leaflet map */
 	var map = L.map('map', {
 		center: [44.8597, -0.5157],
-		zoom: 9
+		zoom: 8
 	});
 
 	/**
