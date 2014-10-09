@@ -1,4 +1,5 @@
 'use strict';
+
 var $;
 var _default = {
 	'emission': '-',

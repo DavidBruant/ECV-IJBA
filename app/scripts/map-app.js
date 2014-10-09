@@ -1,3 +1,5 @@
+"use strict";
+
 function mapApp() {
 	/* create leaflet map */
 	var map = L.map('map', {

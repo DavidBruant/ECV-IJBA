@@ -1,3 +1,5 @@
+"use strict";
+
 /*
 Preserve keywords (CUB, COBAN, COBAS, CDC) in uppercase.
 @return {string}
@@ -40,7 +42,7 @@ function getCentres(epci) {
  * @return {string}   formatted string
  */
 function idify(s) {
-	o = s.replace(/[\s\/\']/g, '-')
+	var o = s.replace(/[\s\/\']/g, '-')
 			.toLowerCase()
 			.replace(/Œ|œ/, 'oe')
 			.replace(/[éèè]/, 'e')

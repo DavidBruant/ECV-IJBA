@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Add missing centres from the CSV to the global list.
  * @param {object} fromData haystack, input data as CSV file

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
 * Fix EPCI to centre/route relation
 */
