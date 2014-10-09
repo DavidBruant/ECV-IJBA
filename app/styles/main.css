@@ -203,7 +203,8 @@ svg .emission.show {
       border-bottom: 3px solid #00369a;
       width: 33%;
       padding: 0.25em 0;
-      color: #fff; }
+      color: #fff;
+      white-space: nowrap; }
     .controls .counter .value {
       font-size: 1.25em; }
     .controls .counter .unit {

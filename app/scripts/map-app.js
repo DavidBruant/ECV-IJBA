@@ -99,25 +99,6 @@ function mapApp() {
 						.attr('class', function (d) {
 							return 'entity ' + getCentres(idify(d.id)).join(' ');
 						})
-						.on('mouseover', function (d) {
-							var eid = idify(d.id);
-							highlightEntity(eid);
-							showEntityLabel(eid);
-							showEntityRoute(eid);
-							// reset style on others elements
-							// d3.selectAll('.entity').classed('active', false);
-							d3.selectAll('circle')
-								.classed('highlight', false)
-								.attr('r', props.circle.default)
-							;
-							// apply style to element(s)
-							// d3.select(this).classed('active', true);
-							d3.selectAll('circle.' + idify(d.id))
-								.classed('highlight', true)
-								.attr('r', props.circle.active)
-							;
-							updateCounter(d.id);
-						})
 					;
 
 					label.attr('id', function (d) { return idify(d.id); })
@@ -145,18 +126,6 @@ function mapApp() {
 				.enter()
 				.append('g')
 			;
-
-			centre
-				.on('mouseover', function (d) {
-					d3.select(this).attr('r', props.circle.active);
-					// reset style on others elements
-					d3.selectAll('.route').classed('show', false);
-					// apply style to element(s)
-					d3.selectAll('.route.' + idify(d.depart)).classed('show', true);
-				})
-				.on('mouseout', function () {
-					d3.selectAll('.route').classed('show', false);
-				});
 
 			var centrePlace = centre.append('circle');
 			var centreLabel = centre.append('text');
