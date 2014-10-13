@@ -94,13 +94,14 @@ $('input').change(function () {
  */
 function updateCounter(id) {
 	$('.emission .value').text(function () {
-		return sumData('svg text' + '.' + idify(id) + '.emission');
+		return sumData('svg text' + '.' + getEpci(idify(id)) + '.emission');
 	});
 	$('.qte .value').text(function () {
-		return sumData('svg text' + '.' + idify(id) + '.qte');
+        console.log('qte', id, 'svg text' + '.' + getEpci(idify(id)) + '.qte', $('svg text' + '.' + getEpci(idify(id)) + '.qte'));
+		return sumData('svg text' + '.' + getEpci(idify(id)) + '.qte');
 	});
 	$('.dist .value').text(function () {
-		return sumData('svg text' + '.' + idify(id) + '.dist');
+		return sumData('svg text' + '.' + getEpci(idify(id)) + '.dist');
 	});
 }
 

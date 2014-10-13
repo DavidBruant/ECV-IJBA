@@ -13,6 +13,7 @@ function toProperCase(str) {
 	});
 }
 
+// TODO: pre-process the data to make this function cheaper
 function getEpci(centre) {
 	for (var e in epci2centre) {
 		if (epci2centre[e].length > 0) {

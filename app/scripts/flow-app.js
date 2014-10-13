@@ -52,7 +52,7 @@ function flowApp() {
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var sankey = d3.sankey()
-			.nodeWidth(25)
+			.nodeWidth(40)
 			.nodePadding(10)
 			.size([width, height]);
 
@@ -60,7 +60,7 @@ function flowApp() {
 
 
 
-	d3.csv('scripts/routes-dechets.csv', function (dataset) {
+	d3.csv('data/routes-dechets.csv', function (dataset) {
 		/**
 		 * List of centres
 		 * @type {Array}
@@ -68,7 +68,7 @@ function flowApp() {
 		var _centres = [];
 		var _links = [];
 
-		d3.json('scripts/gironde-epci.topo.json', function (dataset) {
+		d3.json('data/gironde-epci.topo.json', function (dataset) {
 			var geoData = topojson.feature(dataset, dataset.objects['gironde-epci.geo']);
 			_centres = addCentre(geoData.features, 'id', _centres);
 		});

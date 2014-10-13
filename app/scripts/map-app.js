@@ -62,7 +62,7 @@ function mapApp() {
 
 	function drawEntities() {
 		return new Promise(function (resolve, reject) {
-			d3.json('scripts/gironde-epci.topo.json', function (dataset) {
+			d3.json('data/gironde-epci.topo.json', function (dataset) {
 				var geoData = topojson.feature(dataset, dataset.objects['gironde-epci.geo']);
 				var bounds = d3.geo.bounds(geoData);
 				path = d3.geo.path().projection(projectPoint);
@@ -120,7 +120,7 @@ function mapApp() {
 	}
 
 	function drawTransport() {
-		d3.csv('scripts/routes-dechets.csv', function (error, dataset) {
+		d3.csv('data/routes-dechets.csv', function (error, dataset) {
 			centre = centres.selectAll('.centre')
 				.data(dataset)
 				.enter()
@@ -230,7 +230,7 @@ function mapApp() {
 					.attr('transform', function (d) {return attach(d); })
 					.text(function (d) { return Math.round(d.co2, 0) + ' kg'; })
 				;
-				qte.attr('class', function (d) { return ['qte', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))].join(' '); })
+				qte.attr('class', function (d) { console.log('qte class', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))); return ['qte', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))].join(' '); })
 					.attr('y', 5)
 					.attr('dy', '.35em')
 					.attr('transform', function (d) {return attach(d); })
