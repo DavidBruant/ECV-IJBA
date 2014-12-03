@@ -58,6 +58,14 @@ Finish by running `gulp` for building and gulp watch for preview :
 gulp watch
 ```
 
+## Doc
+
+### data formatting
+
+
+
+
+
 ### License
 
 Project under [MIT license](http://choosealicense.com/licenses/mit/).
