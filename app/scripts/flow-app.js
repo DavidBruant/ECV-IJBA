@@ -60,7 +60,7 @@ function flowApp() {
 
 
 
-	d3.csv('data/routes-dechets.csv', function (dataset) {
+	trajetsP.then(function (dataset) {
 		/**
 		 * List of centres
 		 * @type {Array}

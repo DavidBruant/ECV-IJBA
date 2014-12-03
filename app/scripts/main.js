@@ -9,11 +9,16 @@
 (function (window, document, L, d3) {
 	'use strict';
 
-		/**
-		 * List of centres
-		 * @type {Array}
-		 */
-		var _centres = [], _links = [];
+    /**
+     * List of centres
+     * @type {Array}
+     */
+    var _centres = [], _links = [];
+    
+    pointsP.then(function(points){
+        console.log('points', points);
+    });
+    
 	flowApp(_centres, _links);
 	mapApp(_centres, _links);
 }(window, document, L, d3));

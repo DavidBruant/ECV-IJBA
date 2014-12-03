@@ -11,7 +11,6 @@
     "gulp-csso": "~0.2.6",
     "gulp-filter": "~0.3.1",
     "gulp-imagemin": "~0.1.4",
-    "gulp-jshint": "~1.4.0",
     "gulp-load-plugins": "~0.3.0",
     "gulp-sass": "^0.7.1",
     "gulp-size": "~0.1.2",

@@ -48,8 +48,6 @@ gulp.task('styles', function () {
 // Scripts
 gulp.task('scripts', function () {
     return gulp.src([paths.scripts.src])
-        .pipe($.jshint('.jshintrc'))
-        .pipe($.jshint.reporter('default'))
         .pipe($.size());
 });
 

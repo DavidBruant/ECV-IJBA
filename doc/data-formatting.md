@@ -11,7 +11,7 @@ Description des colonnes :
 
 * `id` identifiant numérique (1, 2, 67). Unique par centre.
 * `nom` Nom utilisé dans l'interface utilisateur
-* `type` L'une des valeurs suivantes : 'epci', 'transfert', 'traitement'
+* `type` L'une des valeurs suivantes : `epci`, `transfert`, `traitement`
 * `longitude` nombre flottant (avec un . comme séparateur décimal (3.141592))
 * `latitude` nombre flottant (avec un . comme séparateur décimal)
 

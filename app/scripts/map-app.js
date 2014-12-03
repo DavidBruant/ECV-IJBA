@@ -61,66 +61,63 @@ function mapApp() {
 
 
 	function drawEntities() {
-		return new Promise(function (resolve, reject) {
-			d3.json('data/gironde-epci.topo.json', function (dataset) {
-				var geoData = topojson.feature(dataset, dataset.objects['gironde-epci.geo']);
-				var bounds = d3.geo.bounds(geoData);
-				path = d3.geo.path().projection(projectPoint);
+		return getTopoJSON().then(function (dataset) {
+            var geoData = topojson.feature(dataset, dataset.objects['gironde-epci.geo']);
+            var bounds = d3.geo.bounds(geoData);
+            path = d3.geo.path().projection(projectPoint);
 
-				// addCentre(geoData.features, 'id');
+            // addCentre(geoData.features, 'id');
 
 
-				entity = entities.selectAll('.entity')
-					.data(geoData.features)
-					.enter()
-						.append('path')
-						.attr('class', 'entity')
-					;
-				label = entitiesLabels.selectAll('.entity-label')
-					.data(geoData.features)
-					.enter()
-						.append('text')
-						.attr('class', 'entity-label')
-					;
+            entity = entities.selectAll('.entity')
+                .data(geoData.features)
+                .enter()
+                    .append('path')
+                    .attr('class', 'entity')
+                ;
+            label = entitiesLabels.selectAll('.entity-label')
+                .data(geoData.features)
+                .enter()
+                    .append('text')
+                    .attr('class', 'entity-label')
+                ;
 
-				// Reposition the SVG to cover the features.
-				function reset() {
-					var bottomLeft = projectPoint(bounds[0]),
-						topRight = projectPoint(bounds[1]);
+            // Reposition the SVG to cover the features.
+            function reset() {
+                var bottomLeft = projectPoint(bounds[0]),
+                    topRight = projectPoint(bounds[1]);
 
-					svg.attr('width', topRight[0] - bottomLeft[0])
-						.attr('height', bottomLeft[1] - topRight[1])
-						.style('margin-left', bottomLeft[0] + 'px')
-						.style('margin-top', topRight[1] + 'px');
+                svg.attr('width', topRight[0] - bottomLeft[0])
+                    .attr('height', bottomLeft[1] - topRight[1])
+                    .style('margin-left', bottomLeft[0] + 'px')
+                    .style('margin-top', topRight[1] + 'px');
 
-					g.attr('transform', 'translate(' + -bottomLeft[0] + ',' + -topRight[1] + ')');
+                g.attr('transform', 'translate(' + -bottomLeft[0] + ',' + -topRight[1] + ')');
 
-					entity.attr('d', path)
-						.attr('class', function (d) {
-							return 'entity ' + getCentres(idify(d.id)).join(' ');
-						})
-					;
+                entity.attr('d', path)
+                    .attr('class', function (d) {
+                        return 'entity ' + getCentres(idify(d.id)).join(' ');
+                    })
+                ;
 
-					label.attr('id', function (d) { return idify(d.id); })
-						.attr('class', function (d) { return 'entity-label ' + idify(d.id); })
-						.attr('transform', function (d) {
-							return 'translate(' + path.centroid(d) + ')';
-						})
-						.attr('x', -20)
-						.attr('dy', '.35em')
-						.text(function (d) { return toProperCase(d.id); })
-					;
-				}
+                label.attr('id', function (d) { return idify(d.id); })
+                    .attr('class', function (d) { return 'entity-label ' + idify(d.id); })
+                    .attr('transform', function (d) {
+                        return 'translate(' + path.centroid(d) + ')';
+                    })
+                    .attr('x', -20)
+                    .attr('dy', '.35em')
+                    .text(function (d) { return toProperCase(d.id); })
+                ;
+            }
 
-				map.on('viewreset', reset);
-				reset();
-				resolve();
-			});
-		});
+            map.on('viewreset', reset);
+            reset();
+        });
 	}
 
 	function drawTransport() {
-		d3.csv('data/routes-dechets.csv', function (error, dataset) {
+		trajetsP.then(function (dataset) {
 			centre = centres.selectAll('.centre')
 				.data(dataset)
 				.enter()
