@@ -60,41 +60,47 @@ function flowApp() {
 
 
 
-	trajetsP.then(function (dataset) {
-		/**
+	Promise.all([pointsP, trajetsP]).then(function(res) {
+		var points = res[0],
+            trajets = res[1];
+        
+        /**
 		 * List of centres
 		 * @type {Array}
 		 */
-		var _centres = [];
-		var _links = [];
+		var nodes = points;
+        
+		var links = trajets.map(function(t){
+            return {
+                source: nodes.findIndex(function(n){ return n.id === t.depart.id; }),
+                target: nodes.findIndex(function(n){ return n.id === t.arrivee.id; }),
+                value: t.poids
+            };
+        });
 
-		d3.json('data/gironde-epci.topo.json', function (dataset) {
+		/*d3.json('data/gironde-epci.topo.json', function (dataset) {
 			var geoData = topojson.feature(dataset, dataset.objects['gironde-epci.geo']);
 			_centres = addCentre(geoData.features, 'id', _centres);
-		});
-
-		_centres = addCentre(dataset, 'depart', _centres);
-		_centres = addCentre(dataset, 'arrivee', _centres);
-		_links = addLink(dataset, _centres, _links);
+		});*/
 
 		sankey
-				.nodes(_centres)
-				.links(_links)
+				.nodes(nodes)
+				.links(links)
 				.layout(32);
 
 		var link = svg.append("g").selectAll(".link")
-				.data(_links)
+				.data(links)
 			.enter().append("path")
-				.attr("class", function (d) { return ["link ", d.source.name, d.target.name].join(' '); })
+				.attr("class", function (d) { return ["link ", d.source.nom, d.target.nom].join(' '); })
 				.attr("d", path)
 				.style("stroke-width", function(d) { return Math.max(1, d.dy); })
 				.sort(function(a, b) { return b.dy - a.dy; });
 
 		link.append("title")
-				.text(function(d) { return d.source.name + " → " + d.target.name + "\n" + format(d.value); });
+				.text(function(d) { return d.source.nom + " → " + d.target.nom + "\n" + format(d.value); });
 
 		var node = svg.append("g").selectAll(".node")
-				.data(_centres)
+				.data(points)
 			.enter().append("g")
 				.attr("class", "node")
 				.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
@@ -106,18 +112,18 @@ function flowApp() {
 		node.append("rect")
 				.attr("height", function(d) { return Math.max(5, d.dy); })
 				.attr("width", sankey.nodeWidth())
-				.style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
+				.style("fill", function(d) { return d.color = color(d.nom); })
 				// .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
-				.attr("class", function (d) { return d.name; })
+				//.attr("class", function (d) { return d.nom; })
 				.on('mouseover', function (d) {
-					var eid = d.name;
+					var eid = d.nom;
 					updateCounter(eid);
 					highlightEntity(eid);
 					showEntityLabel(eid);
 					showEntityRoute(eid);
 				})
 			.append("title")
-				.text(function(d) { return d.name + "\n" + format(d.value); });
+				.text(function(d) { return d.nom + "\n" + format(d.value); });
 
 		node.append("text")
 				.attr("x", -6)
@@ -125,7 +131,7 @@ function flowApp() {
 				.attr("dy", ".35em")
 				.attr("text-anchor", "end")
 				.attr("transform", null)
-				.text(function(d) { return d.name; })
+				.text(function(d) { return d.nom; })
 			.filter(function(d) { return d.x < width / 2; })
 				.attr("x", 6 + sankey.nodeWidth())
 				.attr("text-anchor", "start");

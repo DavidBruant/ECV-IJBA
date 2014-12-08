@@ -63,10 +63,10 @@
                         }   
                     });
                     
-                    Object.freeze(pt);
+                    //Object.freeze(pt);
                 });
 
-                Object.freeze(dataset);
+                //Object.freeze(dataset);
                 
                 resolve(dataset);
             }

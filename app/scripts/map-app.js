@@ -103,6 +103,7 @@ function mapApp() {
                 label.attr('id', function (d) { return idify(d.id); })
                     .attr('class', function (d) { return 'entity-label ' + idify(d.id); })
                     .attr('transform', function (d) {
+                        //console.log('transform', 'translate(' + path.centroid(d) + ')', d);
                         return 'translate(' + path.centroid(d) + ')';
                     })
                     .attr('x', -20)
@@ -154,36 +155,39 @@ function mapApp() {
 			;
 
 			function attach(d) {
-				var coordDepart = [ d.lon_depart, d.lat_depart ];
-				var coordArrivee = [ d.lon_arrivee, d.lat_arrivee ];
+				var coordDepart = [ d.depart.longitude, d.depart.latitude ];
+				var coordArrivee = [ d.arrivee.longitude, d.arrivee.latitude ];
+                
+                //console.log('attach transform', 'translate(' + path.centroid({type: 'LineString', coordinates: [coordDepart, coordArrivee ] }) + ')', d);
+                
 				return 'translate(' + path.centroid({type: 'LineString', coordinates: [coordDepart, coordArrivee ] }) + ')';
 			}
 
 			function reset() {
 				centre
 					.attr('class', function (d) {
-						return	' centre ' + idify(d.depart) +
-								' from-' + typeCentre[d.niv_depart] +
-								' to-' + typeCentre[d.niv_arrivee];
+						return	' centre ' + idify(d.depart.nom) +
+								' from-' + d.depart.type +
+								' to-' + d.arrivee.type;
 					})
 				;
 				centrePlace
 						.attr('r', props.circle.default)
 						.attr('cx', function (d) { return projectDepart(d)[0]; })
 						.attr('cy', function (d) { return projectDepart(d)[1]; })
-						.attr('title', function (d) { return idify(d.depart); })
+						.attr('title', function (d) { return idify(d.depart.nom); })
 				;
 				centreLabel
 					.attr('class', 'label')
 					.attr('transform', function (d) {
 						return 'translate(' +  projectDepart(d)[0] + ', ' + projectDepart(d)[1] + ')';
 					})
-					.text(function (d) { return idify(d.depart); })
+					.text(function (d) { return idify(d.depart.nom); })
 				;
 
 				routePath.attr('d', function (d) {
-						var coordDepart = [ d.lon_depart, d.lat_depart ];
-						var coordArrivee = [ d.lon_arrivee, d.lat_arrivee ];
+						var coordDepart = [ d.depart.longitude, d.depart.latitude ];
+						var coordArrivee = [ d.arrivee.longitude, d.arrivee.latitude ];
 						var vertex = path.centroid({type: 'LineString', coordinates: [coordDepart, coordArrivee ] });
 						return path({
 							type: 'LineString',
@@ -196,10 +200,10 @@ function mapApp() {
 					})
 					.attr('class', function (d) {
 						return [
-							getEpci(idify(d.depart)), getEpci(idify(d.arrivee)),
-							'route', idify(d.depart), idify(d.arrivee),
-							'from-' + typeCentre[d.niv_depart],
-							'to-' + typeCentre[d.niv_arrivee],
+							getEpci(idify(d.depart.nom)), getEpci(idify(d.arrivee.nom)),
+							'route', idify(d.depart.nom), idify(d.arrivee.nom),
+							'from-' + d.depart.type,
+							'to-' + d.arrivee.type,
 						].join(' ');
 					})
 				;
@@ -221,23 +225,23 @@ function mapApp() {
 					})
 				;
 
-				emission.attr('class', function (d) { return ['emission', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))].join(' '); })
+				emission.attr('class', function (d) { return ['emission', getEpci(idify(d.depart.nom)), getEpci(idify(d.arrivee.nom))].join(' '); })
 					.attr('y', -5)
 					.attr('dy', '.35em')
 					.attr('transform', function (d) {return attach(d); })
-					.text(function (d) { return Math.round(d.co2, 0) + ' kg'; })
+					.text(function (d) { return Math.round(d.co2) + ' kg'; })
 				;
-				qte.attr('class', function (d) { console.log('qte class', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))); return ['qte', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))].join(' '); })
+				qte.attr('class', function (d) { return ['qte', getEpci(idify(d.depart.nom)), getEpci(idify(d.arrivee.nom))].join(' '); })
 					.attr('y', 5)
 					.attr('dy', '.35em')
 					.attr('transform', function (d) {return attach(d); })
-					.text(function (d) { return Math.round(d.qte, 0) + ' t'; })
+					.text(function (d) { return Math.round(d.poids) + ' t'; })
 				;
-				dist.attr('class', function (d) { return ['dist', getEpci(idify(d.depart)), getEpci(idify(d.arrivee))].join(' '); })
+				dist.attr('class', function (d) { return ['dist', getEpci(idify(d.depart.nom)), getEpci(idify(d.arrivee.nom))].join(' '); })
 					.attr('y', 15)
 					.attr('dy', '.35em')
 					.attr('transform', function (d) {return attach(d); })
-					.text(function (d) { return Math.round(d.dist, 0) + ' km'; })
+					.text(function (d) { return Math.round(d.distance) + ' km'; })
 				;
 			}
 
@@ -249,8 +253,10 @@ function mapApp() {
 	/**
 	 * Utility to project a depart point
 	 */
-	function projectDepart(d) { return projectPoint([Number(d.lon_depart), Number(d.lat_depart)]); }
-	function projectArrivee(d) { return projectPoint([Number(d.lon_arrivee), Number(d.lat_arrivee)]); }
+	function projectDepart(d) { 
+                               return projectPoint([d.depart.longitude, d.depart.latitude]); 
+                              }
+	function projectArrivee(d) { return projectPoint([d.arrivee.longitude, d.arrivee.latitude]); }
 
 	/**
 	 * Use Leaflet to implement a D3 geographic projection.
